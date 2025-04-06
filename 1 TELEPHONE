@@ -1,0 +1,215 @@
+class HashTableChaining:
+    def __init__(self, size):
+        self.size = size
+        self.table = [[] for _ in range(size)]
+    
+    def hash_function(self, key):
+        return hash(key) % self.size
+    
+    def insert(self, key, value):
+        index = self.hash_function(key)
+        self.table[index].append((key, value))
+    
+    def search(self, key):
+        index = self.hash_function(key)
+        comparisons = 0
+        for k, v in self.table[index]:
+            comparisons += 1
+            if k == key:
+                return v, comparisons
+        return None, comparisons
+
+
+class HashTableLinearProbing:
+    def __init__(self, size):
+        self.size = size
+        self.table = [None] * size
+    
+    def hash_function(self, key):
+        return hash(key) % self.size
+    
+    def insert(self, key, value):
+        index = self.hash_function(key)
+        original_index = index
+        while self.table[index] is not None and self.table[index][0] != key:
+            index = (index + 1) % self.size
+            if index == original_index:  # Table is full
+                raise Exception("Hash table is full")
+        self.table[index] = (key, value)
+    
+    def search(self, key):
+        index = self.hash_function(key)
+        original_index = index
+        comparisons = 0
+        while self.table[index] is not None:
+            comparisons += 1
+            if self.table[index][0] == key:
+                return self.table[index][1], comparisons
+            index = (index + 1) % self.size
+            if index == original_index:  # Key not found
+                break
+        return None, comparisons
+
+
+# Simulation
+def compare_hash_tables():
+    phone_book = {
+        "Alice": "12345",
+        "Bob": "23456",
+        "Charlie": "23456",
+        "David": "45678",
+        "Eve": "56789",
+    }
+    
+    # Initialize hash tables
+    size = 10
+    chaining_ht = HashTableChaining(size)
+    linear_probing_ht = HashTableLinearProbing(size)
+    
+    # Insert entries
+    for name, number in phone_book.items():
+        chaining_ht.insert(name, number)
+        linear_probing_ht.insert(name, number)
+    
+    # Search for numbers and compare
+    search_keys = ["Alice", "Charlie", "Eve", "Zara"]
+    print("Comparison of Collision Handling Techniques:")
+    print("-" * 50)
+    for key in search_keys:
+        chain_result, chain_comparisons = chaining_ht.search(key)
+        probe_result, probe_comparisons = linear_probing_ht.search(key)
+        
+        print(f"Searching for {key}:")
+        print(f"  Chaining: {chain_result}, Comparisons: {chain_comparisons}")
+        print(f"  Linear Probing: {probe_result}, Comparisons: {probe_comparisons}")
+        print("-" * 50)
+
+
+# Run the comparison
+compare_hash_tables()
+"""
+class HashTableChaining:
+    def __init__(self, size):
+        self.size = size
+        self.table = [[] for _ in range(size)]
+    
+    def hash_function(self, key):
+        return hash(key) % self.size
+    
+    def insert(self, key, value):
+        index = self.hash_function(key)
+        self.table[index].append((key, value))
+    
+    def search(self, key):
+        index = self.hash_function(key)
+        comparisons = 0
+        for k, v in self.table[index]:
+            comparisons += 1
+            if k == key:
+                return v, comparisons
+        return None, comparisons
+
+
+class HashTableLinearProbing:
+    def __init__(self, size):
+        self.size = size
+        self.table = [None] * size
+    
+    def hash_function(self, key):
+        return hash(key) % self.size
+    
+    def insert(self, key, value):
+        index = self.hash_function(key)
+        original_index = index
+        while self.table[index] is not None and self.table[index][0] != key:
+            index = (index + 1) % self.size
+            if index == original_index:  # Table is full
+                raise Exception("Hash table is full")
+        self.table[index] = (key, value)
+    
+    def search(self, key):
+        index = self.hash_function(key)
+        original_index = index
+        comparisons = 0
+        while self.table[index] is not None:
+            comparisons += 1
+            if self.table[index][0] == key:
+                return self.table[index][1], comparisons
+            index = (index + 1) % self.size
+            if index == original_index:  # Key not found
+                break
+        return None, comparisons
+
+
+# Simulation
+def compare_hash_tables():
+    phone_book = {}
+    print("Enter phone book entries (type 'done' when finished):")
+    
+    # Taking user input for phone book entries
+    while True:
+        name = input("Enter name: ")
+        if name.lower() == "done":
+            break
+        number = input(f"Enter phone number for {name}: ")
+        phone_book[name] = number
+    
+    # Initialize hash tables
+    size = int(input("Enter hash table size: "))
+    chaining_ht = HashTableChaining(size)
+    linear_probing_ht = HashTableLinearProbing(size)
+    
+    # Insert entries into hash tables
+    for name, number in phone_book.items():
+        chaining_ht.insert(name, number)
+        linear_probing_ht.insert(name, number)
+    
+    # Taking user input for search keys
+    search_keys = []
+    print("Enter names to search (type 'done' when finished):")
+    while True:
+        key = input("Enter name to search: ")
+        if key.lower() == "done":
+            break
+        search_keys.append(key)
+    
+    print("Comparison of Collision Handling Techniques:")
+    print("-" * 50)
+    
+    # Search for numbers and compare
+    for key in search_keys:
+        chain_result, chain_comparisons = chaining_ht.search(key)
+        probe_result, probe_comparisons = linear_probing_ht.search(key)
+        
+        print(f"Searching for {key}:")
+        print(f"  Chaining: {chain_result}, Comparisons: {chain_comparisons}")
+        print(f"  Linear Probing: {probe_result}, Comparisons: {probe_comparisons}")
+        print("-" * 50)
+
+
+# Run the comparison
+compare_hash_tables()
+Enter phone book entries (type 'done' when finished):
+Enter name: Alice
+Enter phone number for Alice: 12345
+Enter name: Bob
+Enter phone number for Bob: 23456
+Enter name: done
+
+Enter hash table size: 10
+Enter names to search (type 'done' when finished):
+Enter name to search: Alice
+Enter name to search: Bob
+Enter name to search: done
+
+Comparison of Collision Handling Techniques:
+--------------------------------------------------
+Searching for Alice:
+  Chaining: 12345, Comparisons: 1
+  Linear Probing: 12345, Comparisons: 1
+--------------------------------------------------
+Searching for Bob:
+  Chaining: 23456, Comparisons: 1
+  Linear Probing: 23456, Comparisons: 1
+--------------------------------------------------
+""""
