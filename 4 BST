@@ -1,0 +1,237 @@
+#include<iostream>
+using namespace std;
+
+// Definition of a Node in the Binary Search Tree
+struct Node 
+{
+   int data;
+   Node* left;
+   Node* right;
+   
+   Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+
+// Function to insert a new node in BST
+Node* insert(Node* root, int val) 
+{
+   if (!root) return new Node(val);
+   if (val < root->data)  // Corrected '<' operator
+      root->left = insert(root->left, val);
+   else
+      root->right = insert(root->right, val);
+   return root;
+}
+
+// Function to find the number of nodes in the longest path (height of the tree)
+int findHeight(Node* root) {
+   if (!root) return 0;
+   int leftHeight = findHeight(root->left);
+   int rightHeight = findHeight(root->right);
+   return 1 + max(leftHeight, rightHeight);
+}
+
+// Function to find the minimum value in the BST
+int findMin(Node* root) {
+   if (!root) return -1; // Tree is empty
+   while (root->left)   // Corrected '->' operator
+      root = root->left;
+   return root->data;
+}
+
+// Function to mirror the tree (swap left and right pointers at every node)
+void mirror(Node* root) {
+   if (!root) return;
+   swap(root->left, root->right);
+   mirror(root->left);
+   mirror(root->right);
+}
+
+// Function to search for a value in the BST
+bool search(Node* root, int val) {
+   if (!root) return false;
+   if (root->data == val) return true;
+   if (val < root->data)  // Corrected '<' operator
+      return search(root->left, val);
+   return search(root->right, val);
+}
+
+// Inorder traversal to display the BST
+void inorder(Node* root) {
+   if (!root) return;
+   inorder(root->left);
+   cout << root->data << " ";  // Corrected '<<' operator
+   inorder(root->right);
+}
+
+int main() {
+   Node* root = nullptr;
+
+   // Insert nodes into the BST
+   int values[] = {50, 30, 70, 20, 40, 60, 80};
+   for (int val : values)
+      root = insert(root, val);
+
+   // Display the BST
+   cout << "Inorder traversal of the BST: ";
+   inorder(root);
+   cout << endl;
+
+   // Insert a new node
+   int newNode = 25;
+   root = insert(root, newNode);
+   cout << "Inorder traversal after inserting " << newNode << ": ";
+   inorder(root);
+   cout << endl;
+
+   // Find the number of nodes in the longest path
+   int height = findHeight(root);
+   cout << "Number of nodes in the longest path (height): " << height << endl;
+
+   // Find the minimum data value
+   int minValue = findMin(root);
+   cout << "Minimum data value in the BST: " << minValue << endl;
+
+   // Mirror the tree
+   mirror(root);
+
+   cout << "Inorder traversal after mirroring the tree: ";
+   inorder(root);
+   cout << endl;
+
+   // Search for a value
+   int searchValue = 40;
+   bool isFound = search(root, searchValue);
+   cout << "Search for " << searchValue << ": " << (isFound ? "Found" : "Not Found") << endl;
+
+   return 0;
+}
+
+/*
+#include<iostream>
+using namespace std;
+
+// Definition of a Node in the Binary Search Tree
+struct Node 
+{
+   int data;
+   Node* left;
+   Node* right;
+   
+   Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+
+// Function to insert a new node in BST
+Node* insert(Node* root, int val) 
+{
+   if (!root) return new Node(val);
+   if (val < root->data)  // Corrected '<' operator
+      root->left = insert(root->left, val);
+   else
+      root->right = insert(root->right, val);
+   return root;
+}
+
+// Function to find the number of nodes in the longest path (height of the tree)
+int findHeight(Node* root) {
+   if (!root) return 0;
+   int leftHeight = findHeight(root->left);
+   int rightHeight = findHeight(root->right);
+   return 1 + max(leftHeight, rightHeight);
+}
+
+// Function to find the minimum value in the BST
+int findMin(Node* root) {
+   if (!root) return -1; // Tree is empty
+   while (root->left)   // Corrected '->' operator
+      root = root->left;
+   return root->data;
+}
+
+// Function to mirror the tree (swap left and right pointers at every node)
+void mirror(Node* root) {
+   if (!root) return;
+   swap(root->left, root->right);
+   mirror(root->left);
+   mirror(root->right);
+}
+
+// Function to search for a value in the BST
+bool search(Node* root, int val) {
+   if (!root) return false;
+   if (root->data == val) return true;
+   if (val < root->data)  // Corrected '<' operator
+      return search(root->left, val);
+   return search(root->right, val);
+}
+
+// Inorder traversal to display the BST
+void inorder(Node* root) {
+   if (!root) return;
+   inorder(root->left);
+   cout << root->data << " ";  // Corrected '<<' operator
+   inorder(root->right);
+}
+
+int main() {
+   Node* root = nullptr;
+   int numNodes, val, newNode, searchValue;
+
+   // Take input from the user for the number of nodes to insert into the BST
+   cout << "Enter the number of nodes to insert into the BST: ";
+   cin >> numNodes;
+
+   // Take input from the user for the node values to be inserted into the BST
+   cout << "Enter the values to insert into the BST:\n";
+   for (int i = 0; i < numNodes; i++) {
+      cin >> val;
+      root = insert(root, val);
+   }
+
+   // Display the BST
+   cout << "Inorder traversal of the BST: ";
+   inorder(root);
+   cout << endl;
+
+   // Ask the user to insert a new node
+   cout << "Enter a new node to insert into the BST: ";
+   cin >> newNode;
+   root = insert(root, newNode);
+   cout << "Inorder traversal after inserting " << newNode << ": ";
+   inorder(root);
+   cout << endl;
+
+   // Find the number of nodes in the longest path (height of the tree)
+   int height = findHeight(root);
+   cout << "Number of nodes in the longest path (height): " << height << endl;
+
+   // Find the minimum data value
+   int minValue = findMin(root);
+   cout << "Minimum data value in the BST: " << minValue << endl;
+
+   // Mirror the tree
+   mirror(root);
+
+   cout << "Inorder traversal after mirroring the tree: ";
+   inorder(root);
+   cout << endl;
+
+   // Ask the user to search for a value
+   cout << "Enter a value to search in the BST: ";
+   cin >> searchValue;
+   bool isFound = search(root, searchValue);
+   cout << "Search for " << searchValue << ": " << (isFound ? "Found" : "Not Found") << endl;
+
+   return 0;
+}
+Enter the number of nodes to insert into the BST: 5
+Enter the values to insert into the BST:
+50 30 70 20 40
+Inorder traversal of the BST: 20 30 40 50 70 
+Enter a new node to insert into the BST: 25
+Inorder traversal after inserting 25: 20 25 30 40 50 70 
+Number of nodes in the longest path (height): 4
+Minimum data value in the BST: 20
+Inorder traversal after mirroring the tree: 70 50 40 30 25 20 
+Enter a value to search in the BST: 40
+Search for 40: Found
+*/
