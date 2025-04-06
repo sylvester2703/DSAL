@@ -1,0 +1,344 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Node // Node Class
+{
+public:
+    string label;
+    Node *child[10];
+    int childCount;
+
+    Node(string name) : label(name), childCount(0) {
+        for (int i = 0; i < 10; i++)
+            child[i] = nullptr;
+    }
+};
+
+class BookTree // BookTree Class
+{
+private:
+    Node *root;
+
+public:
+    BookTree() : root(nullptr) {}
+
+    void createTree();
+    void displayTree(Node *node, int depth = 0);
+    void display();
+};
+
+void BookTree::createTree()
+{
+    int tChapters, tSections, tSubsections;
+    string bookName, chapterName, sectionName, subsectionName;
+
+    cout << "Enter name of the book: ";
+    cin.ignore();
+    getline(cin, bookName);
+    root = new Node(bookName);
+
+    cout << "Enter number of chapters in the book: ";
+    cin >> tChapters;
+
+    for (int i = 0; i < tChapters; i++)
+    {
+        cout << "Enter name of Chapter " << i + 1 << ": ";
+        cin.ignore();
+        getline(cin, chapterName);
+
+        Node *chapter = new Node(chapterName);
+        root->child[root->childCount++] = chapter;
+
+        cout << "Enter number of sections in Chapter " << chapterName << ": ";
+        cin >> tSections;
+
+        for (int j = 0; j < tSections; j++)
+        {
+            cout << "Enter name of Section " << j + 1 << ": ";
+            cin.ignore();
+            getline(cin, sectionName);
+
+            Node *section = new Node(sectionName);
+            chapter->child[chapter->childCount++] = section;
+
+            cout << "Enter number of subsections in Section " << sectionName << ": ";
+            cin >> tSubsections;
+
+            for (int k = 0; k < tSubsections; k++)
+            {
+                cout << "Enter name of Subsection " << k + 1 << ": ";
+                cin.ignore();
+                getline(cin, subsectionName);
+
+                Node *subsection = new Node(subsectionName);
+                section->child[section->childCount++] = subsection;
+            }
+        }
+    }
+}
+
+void BookTree::displayTree(Node *node, int depth)
+{
+    if (!node)
+        return;
+
+    // Indent to represent hierarchy
+    for (int i = 0; i < depth; i++)
+        cout << "  ";
+
+    cout << "- " << node->label << endl;
+
+    for (int i = 0; i < node->childCount; i++)
+    {
+        displayTree(node->child[i], depth + 1);
+    }
+}
+
+void BookTree::display()
+{
+    if (!root)
+    {
+        cout << "The book tree is empty. Create it first." << endl;
+        return;
+    }
+
+    cout << "\n----- Book Hierarchy -----" << endl;
+    displayTree(root);
+    cout << "--------------------------\n";
+}
+
+int main()
+{
+    BookTree bookTree;
+    int choice;
+
+    while (true)
+    {
+        cout << "-----------------" << endl;
+        cout << "Book Tree Creation" << endl;
+        cout << "-----------------" << endl;
+        cout << "1. Create" << endl;
+        cout << "2. Display" << endl;
+        cout << "3. Quit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            bookTree.createTree();
+            break;
+        case 2:
+            bookTree.display();
+            break;
+        case 3:
+            cout << "Thanks for using this program!" << endl;
+            return 0;
+        default:
+            cout << "Wrong choice! Please try again." << endl;
+        }
+    }
+}
+
+/*
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Node // Node Class
+{
+public:
+    string label;
+    Node *child[10];
+    int childCount;
+
+    Node(string name) : label(name), childCount(0) {
+        for (int i = 0; i < 10; i++)
+            child[i] = nullptr;
+    }
+};
+
+class BookTree // BookTree Class
+{
+private:
+    Node *root;
+
+public:
+    BookTree() : root(nullptr) {}
+
+    void createTree();  // Function to create the tree
+    void displayTree(Node *node, int depth = 0); // Function to display tree
+    void display();  // Function to display the entire tree
+};
+
+void BookTree::createTree()
+{
+    int tChapters, tSections, tSubsections;
+    string bookName, chapterName, sectionName, subsectionName;
+
+    // Taking book name input
+    cout << "Enter name of the book: ";
+    cin.ignore();  // To ignore the leftover newline from previous input
+    getline(cin, bookName);
+    root = new Node(bookName);  // Create the root node with the book name
+
+    // Taking the number of chapters as input
+    cout << "Enter number of chapters in the book: ";
+    cin >> tChapters;
+
+    for (int i = 0; i < tChapters; i++)
+    {
+        // Taking chapter name input
+        cout << "Enter name of Chapter " << i + 1 << ": ";
+        cin.ignore();
+        getline(cin, chapterName);
+
+        Node *chapter = new Node(chapterName);  // Create a new chapter node
+        root->child[root->childCount++] = chapter;  // Add it as a child of the root
+
+        // Taking the number of sections in the chapter
+        cout << "Enter number of sections in Chapter " << chapterName << ": ";
+        cin >> tSections;
+
+        for (int j = 0; j < tSections; j++)
+        {
+            // Taking section name input
+            cout << "Enter name of Section " << j + 1 << ": ";
+            cin.ignore();
+            getline(cin, sectionName);
+
+            Node *section = new Node(sectionName);  // Create a new section node
+            chapter->child[chapter->childCount++] = section;  // Add it as a child of the chapter
+
+            // Taking the number of subsections in the section
+            cout << "Enter number of subsections in Section " << sectionName << ": ";
+            cin >> tSubsections;
+
+            for (int k = 0; k < tSubsections; k++)
+            {
+                // Taking subsection name input
+                cout << "Enter name of Subsection " << k + 1 << ": ";
+                cin.ignore();
+                getline(cin, subsectionName);
+
+                Node *subsection = new Node(subsectionName);  // Create a new subsection node
+                section->child[section->childCount++] = subsection;  // Add it as a child of the section
+            }
+        }
+    }
+}
+
+void BookTree::displayTree(Node *node, int depth)
+{
+    if (!node) return;
+
+    // Indent to represent hierarchy level
+    for (int i = 0; i < depth; i++)
+        cout << "  ";
+
+    cout << "- " << node->label << endl;
+
+    for (int i = 0; i < node->childCount; i++)
+    {
+        // Recursive call to display child nodes
+        displayTree(node->child[i], depth + 1);
+    }
+}
+
+void BookTree::display()
+{
+    if (!root)
+    {
+        cout << "The book tree is empty. Create it first." << endl;
+        return;
+    }
+
+    cout << "\n----- Book Hierarchy -----" << endl;
+    displayTree(root);  // Display the entire tree starting from the root
+    cout << "--------------------------\n";
+}
+
+int main()
+{
+    BookTree bookTree;
+    int choice;
+
+    while (true)
+    {
+        cout << "-----------------" << endl;
+        cout << "Book Tree Creation" << endl;
+        cout << "-----------------" << endl;
+        cout << "1. Create" << endl;
+        cout << "2. Display" << endl;
+        cout << "3. Quit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            bookTree.createTree();  // Option to create the tree
+            break;
+        case 2:
+            bookTree.display();  // Option to display the tree
+            break;
+        case 3:
+            cout << "Thanks for using this program!" << endl;
+            return 0;  // Exit the program
+        default:
+            cout << "Wrong choice! Please try again." << endl;
+        }
+    }
+}
+-----------------
+Book Tree Creation
+-----------------
+1. Create
+2. Display
+3. Quit
+Enter your choice: 1
+Enter name of the book: Programming in C++
+Enter number of chapters in the book: 2
+Enter name of Chapter 1: Introduction
+Enter number of sections in Chapter Introduction: 2
+Enter name of Section 1: Basics
+Enter number of subsections in Section Basics: 2
+Enter name of Subsection 1: Variables
+Enter name of Subsection 2: Data Types
+Enter name of Section 2: Advanced Concepts
+Enter number of subsections in Section Advanced Concepts: 1
+Enter name of Subsection 1: Pointers
+Enter name of Chapter 2: Object-Oriented Programming
+Enter number of sections in Chapter Object-Oriented Programming: 2
+Enter name of Section 1: Classes
+Enter number of subsections in Section Classes: 1
+Enter name of Subsection 1: Constructors
+Enter name of Section 2: Inheritance
+Enter number of subsections in Section Inheritance: 1
+Enter name of Subsection 1: Polymorphism
+-----------------
+Book Hierarchy
+-----------------
+- Programming in C++
+  - Introduction
+    - Basics
+      - Variables
+      - Data Types
+    - Advanced Concepts
+      - Pointers
+  - Object-Oriented Programming
+    - Classes
+      - Constructors
+    - Inheritance
+      - Polymorphism
+--------------------------
+-----------------
+Book Tree Creation
+-----------------
+1. Create
+2. Display
+3. Quit
+Enter your choice: 3
+Thanks for using this program!
+*/
