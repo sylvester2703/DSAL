@@ -1,0 +1,176 @@
+set1={1,2,3,4,5}
+set2={4,5,6,7,8,9}
+
+print("Initial Set is:",set1)
+
+def add():
+    n=int(input("Enter the new element to add: "))
+    set1.add(n)
+    print(set1)
+add()
+
+def remove():
+    n=int(input("Enter the element to remove: "))
+    if n not in set1:
+        print("Element not present in set")
+    else:
+        set1.remove(n)
+    print(set1)
+remove()
+
+def present():
+    n=int(input("Enter the element to search:"))
+    if n in set1:
+        print("True, Element",n,"exists")
+    else:
+        print("False, Element",n,"doesnt exists")
+present()
+       
+def size():
+    print("Size of set 1 is:",len(set1))
+size()
+
+def iterator():
+    print("Set 1 is",list(iter(set1)))
+    print("Set 2 is",list(iter(set2)))
+iterator()
+
+def intersection():
+    inter=set1.intersection(set2)
+    print("Intersection of both sets is:",inter)
+intersection()
+
+def union():
+    uni=set1.union(set2)
+    print("Union of both the sets is:",uni)
+union()
+
+def difference():
+    diff=set1.difference(set2)
+    print("Difference of Set 2 from Set 1 is:",diff)
+    diff1=set2.difference(set1)
+    print("Difference of Set 1 from Set 2 is:",diff1)
+difference()
+
+def subset():
+    ss=set1.issubset(set2)
+    print("Set 1 is subset of Set 2:", ss)
+    ss1=set2.issubset(set1)
+    print("Set 2 is subset of Set 1:", ss1)
+subset()
+""""
+Initial Set is: {1, 2, 3, 4, 5}
+Enter the new element to add: 6
+{1, 2, 3, 4, 5, 6}
+Enter the element to remove: 5
+{1, 2, 3, 4, 6}
+Enter the element to search:4
+True, Element 4 exists
+Size of set 1 is: 5
+Set 1 is [1, 2, 3, 4, 6]
+Set 2 is [4, 5, 6, 7, 8, 9]
+Intersection of both sets is: {4, 6}
+Union of both the sets is: {1, 2, 3, 4, 5, 6, 7, 8, 9}
+Difference of Set 2 from Set 1 is: {1, 2, 3}
+Difference of Set 1 from Set 2 is: {8, 9, 5, 7}
+Set 1 is subset of Set 2: False
+Set 2 is subset of Set 1: False
+""""
+
+----------------------------------------------------------------------------
+
+""""
+# Function to take user input for a set
+def get_set_input(set_name):
+    elements = input(f"Enter the elements for {set_name} separated by spaces: ").split()
+    return set(map(int, elements))  # Convert input strings to integers and create a set
+
+# Get input for set1 and set2
+set1 = get_set_input("Set 1")
+set2 = get_set_input("Set 2")
+
+print("Initial Set 1 is:", set1)
+print("Initial Set 2 is:", set2)
+
+def add():
+    n = int(input("Enter the new element to add to Set 1: "))
+    set1.add(n)
+    print("Updated Set 1:", set1)
+
+add()
+
+def remove():
+    n = int(input("Enter the element to remove from Set 1: "))
+    if n not in set1:
+        print("Element not present in Set 1")
+    else:
+        set1.remove(n)
+    print("Updated Set 1:", set1)
+
+remove()
+
+def present():
+    n = int(input("Enter the element to search in Set 1: "))
+    if n in set1:
+        print(f"True, Element {n} exists in Set 1")
+    else:
+        print(f"False, Element {n} doesn't exist in Set 1")
+
+present()
+       
+def size():
+    print("Size of Set 1 is:", len(set1))
+
+size()
+
+def iterator():
+    print("Set 1 is", list(iter(set1)))
+    print("Set 2 is", list(iter(set2)))
+
+iterator()
+
+def intersection():
+    inter = set1.intersection(set2)
+    print("Intersection of both sets is:", inter)
+
+intersection()
+
+def union():
+    uni = set1.union(set2)
+    print("Union of both the sets is:", uni)
+
+union()
+
+def difference():
+    diff = set1.difference(set2)
+    print("Difference of Set 1 from Set 2 is:", diff)
+    diff1 = set2.difference(set1)
+    print("Difference of Set 2 from Set 1 is:", diff1)
+
+difference()
+
+def subset():
+    ss = set1.issubset(set2)
+    print("Set 1 is subset of Set 2:", ss)
+    ss1 = set2.issubset(set1)
+    print("Set 2 is subset of Set 1:", ss1)
+
+subset()
+Initial Set 1 is: {1, 2, 3, 4, 5}
+Initial Set 2 is: {4, 5, 6, 7, 8, 9}
+Enter the new element to add to Set 1: 6
+Updated Set 1: {1, 2, 3, 4, 5, 6}
+Enter the element to remove from Set 1: 3
+Updated Set 1: {1, 2, 4, 5, 6}
+Enter the element to search in Set 1: 2
+True, Element 2 exists in Set 1
+Size of Set 1 is: 5
+Set 1 is [1, 2, 4, 5, 6]
+Set 2 is [4, 5, 6, 7, 8, 9]
+Intersection of both sets is: {4, 5, 6}
+Union of both the sets is: {1, 2, 3, 4, 5, 6, 7, 8, 9}
+Difference of Set 1 from Set 2 is: {1, 2}
+Difference of Set 2 from Set 1 is: {8, 9, 7}
+Set 1 is subset of Set 2: False
+Set 2 is subset of Set 1: False
+""""
