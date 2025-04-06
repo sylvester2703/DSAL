@@ -1,0 +1,179 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <queue>
+
+
+using namespace std;
+
+// Graph using Adjacency List
+class GraphList {
+public:
+    map<string, vector<string>> adjList; // Adjacency list for graph
+
+    // Function to add an edge between two landmarks (nodes)
+    void addEdge(const string& u, const string& v) {
+        adjList[u].push_back(v);
+        adjList[v].push_back(u); // For undirected graph
+    }
+
+    // Recursive Depth First Search (DFS) function
+    void DFS(const string& node, map<string, bool>& visited) {
+        // Mark the current node as visited
+        visited[node] = true;
+        cout << node << " ";
+
+        // Recur for all the adjacent nodes (neighbors) of the current node
+        // Sort neighbors to ensure consistent traversal order
+        vector<string>& neighbors = adjList[node];
+
+
+        for (const string& neighbor : neighbors) {
+            if (!visited[neighbor]) { // If the neighbor is not visited
+                DFS(neighbor, visited);
+            }
+        }
+    }
+
+    // Wrapper function to initiate DFS from a starting node
+    void performDFS(const string& start) {
+        map<string, bool> visited;  // To track visited nodes
+        cout << "DFS starting from " << start << ": ";
+        DFS(start, visited); // Call recursive DFS
+        cout << endl;
+    }
+
+    // Breadth First Search (BFS) function
+    void BFS(const string& start) {
+        map<string, bool> visited;  // To track visited nodes
+        queue<string> q;
+
+        // Start BFS from the given start node
+        visited[start] = true;
+        q.push(start);
+
+        cout << "BFS starting from " << start << ": ";
+
+        while (!q.empty()) {
+            string node = q.front();
+            q.pop();
+            cout << node << " ";
+
+            // Visit all adjacent nodes of the current node
+            for (const string& neighbor : adjList[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    // Create a graph using adjacency list representation
+    GraphList graph;
+
+    // Add edges between landmarks (nodes)
+    graph.addEdge("mcoe", "Library");
+    graph.addEdge("mcoe", "Cafe");
+    graph.addEdge("Library", "Gym");
+    graph.addEdge("Cafe", "Park");
+    graph.addEdge("Park", "Gym");
+
+    // Perform DFS starting from "College"
+    graph.performDFS("mcoe");
+
+    // Perform BFS starting from "College"
+    graph.BFS("mcoe");
+
+    return 0;
+}
+
+
+
+
+/*
+#include <iostream>
+#include <vector>
+#include <list> // Each vertex has a list to store its neighbours.
+
+using namespace std;
+
+class Graph {
+private:
+    int V; // Number of vertices
+    vector<list<int>> adjList; // Adjacency List: A vector of lists, where each index represents a vertex, and the list contains its neighbours.
+public:
+    Graph(int vertices) {
+        V = vertices;
+        adjList.resize(V);
+    }
+
+    // Add an edge to the graph (undirected)
+    void addEdge(int u, int v) {
+        adjList[u].push_back(v);
+        adjList[v].push_back(u); // Since the graph is undirected, add the reverse edge as well.
+    }
+
+    // Display the adjacency list
+    void display() {
+        for (int i = 0; i < V; i++) {
+            cout << i << ": ";
+            for (int neighbor : adjList[i]) {
+                cout << neighbor << " ";
+            }
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    int vertices, edges;
+    
+    // Take user input for number of vertices and edges
+    cout << "Enter the number of vertices: ";
+    cin >> vertices;
+    Graph graph(vertices); // Create a graph with the specified number of vertices
+    
+    cout << "Enter the number of edges: ";
+    cin >> edges;
+
+    // Take user input for each edge
+    for (int i = 0; i < edges; i++) {
+        int u, v;
+        cout << "Enter edge " << i + 1 << " (u v): ";
+        cin >> u >> v;
+        // Check if the vertices are valid
+        if (u >= 0 && u < vertices && v >= 0 && v < vertices) {
+            graph.addEdge(u, v); // Add the edge to the graph
+        } else {
+            cout << "Invalid vertices! Please enter vertices between 0 and " << vertices - 1 << endl;
+            i--; // Decrease the counter to re-enter the edge
+        }
+    }
+
+    // Display the adjacency list
+    cout << "\nAdjacency List Representation:\n";
+    graph.display();
+
+    return 0;
+}
+Enter the number of vertices: 5
+Enter the number of edges: 6
+Enter edge 1 (u v): 0 1
+Enter edge 2 (u v): 0 4
+Enter edge 3 (u v): 1 2
+Enter edge 4 (u v): 1 3
+Enter edge 5 (u v): 1 4
+Enter edge 6 (u v): 2 3
+
+Adjacency List Representation:
+0: 1 4 
+1: 0 2 3 4 
+2: 1 3 
+3: 1 2 4 
+4: 0 1 3
+
+*/
