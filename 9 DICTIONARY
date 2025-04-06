@@ -1,0 +1,271 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    string key, meaning;
+    int height;
+    Node *left, *right;
+    Node(string k, string m) : key(k), meaning(m), height(1), left(nullptr), right(nullptr) {}
+};
+
+int height(Node* n) { return n ? n->height : 0; }
+
+Node* rotateRight(Node* y) {
+    Node* x = y->left, *T2 = x->right;
+    x->right = y; y->left = T2;
+    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
+    return x;
+}
+
+Node* rotateLeft(Node* x) {
+    Node* y = x->right, *T2 = y->left;
+    y->left = x; x->right = T2;
+    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
+    return y;
+}
+
+Node* balance(Node* root) {
+    if (!root) return root;
+    root->height = max(height(root->left), height(root->right)) + 1;
+    int bf = height(root->left) - height(root->right);
+   
+    if (bf > 1 && root->key > root->left->key) return rotateRight(root);
+    if (bf < -1 && root->key < root->right->key) return rotateLeft(root);
+    if (bf > 1) { root->left = rotateLeft(root->left); return rotateRight(root); }
+    if (bf < -1) { root->right = rotateRight(root->right); return rotateLeft(root); }
+   
+    return root;
+}
+
+Node* insert(Node* root, string key, string meaning) {
+    if (!root) return new Node(key, meaning);
+    if (key < root->key) root->left = insert(root->left, key, meaning);
+    else if (key > root->key) root->right = insert(root->right, key, meaning);
+    else root->meaning = meaning;
+    return balance(root);
+}
+
+Node* findMin(Node* root) {
+    while (root->left) root = root->left;
+    return root;
+}
+
+Node* remove(Node* root, string key) {
+    if (!root) return nullptr;
+    if (key < root->key) root->left = remove(root->left, key);
+    else if (key > root->key) root->right = remove(root->right, key);
+    else {
+        if (!root->left) return root->right;
+        if (!root->right) return root->left;
+        Node* temp = findMin(root->right);
+        root->key = temp->key; root->meaning = temp->meaning;
+        root->right = remove(root->right, temp->key);
+    }
+    return balance(root);
+}
+
+Node* search(Node* root, string key, int &comparisons) {
+    comparisons = 0;
+    while (root) {
+        comparisons++;
+        if (key == root->key) return root;
+        root = (key < root->key) ? root->left : root->right;
+    }
+    return nullptr;
+}
+
+void inorder(Node* root) {
+    if (!root) return;
+    inorder(root->left);
+    cout << root->key << ": " << root->meaning << endl;
+    inorder(root->right);
+}
+
+void reverseInorder(Node* root) {
+    if (!root) return;
+    reverseInorder(root->right);
+    cout << root->key << ": " << root->meaning << endl;
+    reverseInorder(root->left);
+}
+
+int main() {
+    Node* root = nullptr;
+    int choice, comparisons;
+    string key, meaning;
+   
+    while (true) {
+        cout << "\n1. Insert/Update  2. Delete  3. Search  4. Display (Asc)  5. Display (Desc)  6. Exit\nChoice: ";
+        cin >> choice;
+        if (choice == 6) break;
+        switch (choice) {
+            case 1: cout << "Enter keyword & meaning: "; cin >> key; cin.ignore(); getline(cin, meaning);
+                    root = insert(root, key, meaning); break;
+            case 2: cout << "Enter keyword to delete: "; cin >> key;
+                    root = remove(root, key); break;
+            case 3: cout << "Enter keyword to search: "; cin >> key;
+                    if (search(root, key, comparisons))
+                        cout << "Found in " << comparisons << " comparisons.\n";
+                    else
+                        cout << "Not found in " << comparisons << " comparisons.\n";
+                    break;
+            case 4: cout << "Dictionary (Ascending):\n"; inorder(root); break;
+            case 5: cout << "Dictionary (Descending):\n"; reverseInorder(root); break;
+        }
+    }
+    return 0;
+}
+
+/*
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    string key, meaning;
+    int height;
+    Node *left, *right;
+    Node(string k, string m) : key(k), meaning(m), height(1), left(nullptr), right(nullptr) {}
+};
+
+int height(Node* n) { return n ? n->height : 0; }
+
+Node* rotateRight(Node* y) {
+    Node* x = y->left, *T2 = x->right;
+    x->right = y; y->left = T2;
+    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
+    return x;
+}
+
+Node* rotateLeft(Node* x) {
+    Node* y = x->right, *T2 = y->left;
+    y->left = x; x->right = T2;
+    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
+    return y;
+}
+
+Node* balance(Node* root) {
+    if (!root) return root;
+    root->height = max(height(root->left), height(root->right)) + 1;
+    int bf = height(root->left) - height(root->right);
+   
+    if (bf > 1 && root->key > root->left->key) return rotateRight(root);
+    if (bf < -1 && root->key < root->right->key) return rotateLeft(root);
+    if (bf > 1) { root->left = rotateLeft(root->left); return rotateRight(root); }
+    if (bf < -1) { root->right = rotateRight(root->right); return rotateLeft(root); }
+   
+    return root;
+}
+
+Node* insert(Node* root, string key, string meaning) {
+    if (!root) return new Node(key, meaning);
+    if (key < root->key) root->left = insert(root->left, key, meaning);
+    else if (key > root->key) root->right = insert(root->right, key, meaning);
+    else root->meaning = meaning;
+    return balance(root);
+}
+
+Node* findMin(Node* root) {
+    while (root->left) root = root->left;
+    return root;
+}
+
+Node* remove(Node* root, string key) {
+    if (!root) return nullptr;
+    if (key < root->key) root->left = remove(root->left, key);
+    else if (key > root->key) root->right = remove(root->right, key);
+    else {
+        if (!root->left) return root->right;
+        if (!root->right) return root->left;
+        Node* temp = findMin(root->right);
+        root->key = temp->key; root->meaning = temp->meaning;
+        root->right = remove(root->right, temp->key);
+    }
+    return balance(root);
+}
+
+bool search(Node* root, string key, int &comparisons) {
+    comparisons = 0;
+    while (root) {
+        comparisons++;
+        if (key == root->key) return true;
+        root = (key < root->key) ? root->left : root->right;
+    }
+    return false;
+}
+
+void inorder(Node* root) {
+    if (!root) return;
+    inorder(root->left);
+    cout << root->key << ": " << root->meaning << endl;
+    inorder(root->right);
+}
+
+void reverseInorder(Node* root) {
+    if (!root) return;
+    reverseInorder(root->right);
+    cout << root->key << ": " << root->meaning << endl;
+    reverseInorder(root->left);
+}
+
+void insertEntry(Node*& root) {
+    string key, meaning;
+    cout << "Enter keyword & meaning: ";
+    cin >> key;
+    cin.ignore();
+    getline(cin, meaning);
+    root = insert(root, key, meaning);
+}
+
+void deleteEntry(Node*& root) {
+    string key;
+    cout << "Enter keyword to delete: ";
+    cin >> key;
+    root = remove(root, key);
+}
+
+void searchEntry(Node* root) {
+    string key;
+    int comparisons;
+    cout << "Enter keyword to search: ";
+    cin >> key;
+    if (search(root, key, comparisons))
+        cout << "Found in " << comparisons << " comparisons.\n";
+    else
+        cout << "Not found in " << comparisons << " comparisons.\n";
+}
+
+void displayAscending(Node* root) {
+    cout << "Dictionary (Ascending Order):\n";
+    inorder(root);
+}
+
+void displayDescending(Node* root) {
+    cout << "Dictionary (Descending Order):\n";
+    reverseInorder(root);
+}
+
+int main() {
+    Node* root = nullptr;
+    int choice;
+    
+    while (true) {
+        cout << "\n1. Insert/Update  2. Delete  3. Search  4. Display (Asc)  5. Display (Desc)  6. Exit\nChoice: ";
+        cin >> choice;
+        if (choice == 6) break;
+        switch (choice) {
+            case 1: insertEntry(root); break;
+            case 2: deleteEntry(root); break;
+            case 3: searchEntry(root); break;
+            case 4: displayAscending(root); break;
+            case 5: displayDescending(root); break;
+        }
+    }
+    return 0;
+}
+
+*/
