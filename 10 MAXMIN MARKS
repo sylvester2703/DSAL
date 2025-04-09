@@ -1,0 +1,210 @@
+/*#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <limits> // For numeric_limits
+
+using namespace std;
+
+// Heapify function for min-heap
+void minHeapify(vector<int>& arr, int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] < arr[smallest])
+        smallest = left;
+
+    if (right < n && arr[right] < arr[smallest])
+        smallest = right;
+
+    if (smallest != i) {
+        swap(arr[i], arr[smallest]);
+        minHeapify(arr, n, smallest);
+    }
+}
+
+// Build a min-heap
+void buildMinHeap(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = n / 2 - 1; i >= 0; i--)
+        minHeapify(arr, n, i);
+}
+
+// Heapify function for max-heap
+void maxHeapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        maxHeapify(arr, n, largest);
+    }
+}
+
+// Build a max-heap
+void buildMaxHeap(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = n / 2 - 1; i >= 0; i--)
+        maxHeapify(arr, n, i);
+}
+
+// Find the maximum marks using max-heap
+int findMaximumMarks(vector<int> marks) {
+    if (marks.empty()) {
+        cerr << "Error: Empty list of marks." << endl;
+        return numeric_limits<int>::min();
+    }
+    buildMaxHeap(marks);
+    return marks[0];
+}
+
+// Find the minimum marks using min-heap
+int findMinimumMarks(vector<int> marks) {
+    if (marks.empty()) {
+        cerr << "Error: Empty list of marks." << endl;
+        return numeric_limits<int>::max();
+    }
+    buildMinHeap(marks);
+    return marks[0];
+}
+
+int main() {
+    int arr[] = {55, 82, 38, 91, 60, 42, 75};
+    vector<int> marks(arr, arr + sizeof(arr) / sizeof(arr[0]));
+
+    cout << "Marks obtained by students: ";
+    for (int mark : marks) {
+        cout << mark << " ";
+    }
+    cout << endl;
+
+    int maximumMarks = findMaximumMarks(marks);
+    int minimumMarks = findMinimumMarks(marks);
+
+    if (maximumMarks != numeric_limits<int>::min() && minimumMarks != numeric_limits<int>::max()) {
+        cout << "\nMaximum marks obtained: " << maximumMarks << endl;
+        cout << "Minimum marks obtained: " << minimumMarks << endl;
+    }
+
+    return 0;
+}
+*/
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <limits> // For numeric_limits
+
+using namespace std;
+
+// Heapify function for min-heap
+void minHeapify(vector<int>& arr, int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] < arr[smallest])
+        smallest = left;
+
+    if (right < n && arr[right] < arr[smallest])
+        smallest = right;
+
+    if (smallest != i) {
+        swap(arr[i], arr[smallest]);
+        minHeapify(arr, n, smallest);
+    }
+}
+
+// Build a min-heap
+void buildMinHeap(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = n / 2 - 1; i >= 0; i--)
+        minHeapify(arr, n, i);
+}
+
+// Heapify function for max-heap
+void maxHeapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        maxHeapify(arr, n, largest);
+    }
+}
+
+// Build a max-heap
+void buildMaxHeap(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = n / 2 - 1; i >= 0; i--)
+        maxHeapify(arr, n, i);
+}
+
+// Find the maximum marks using max-heap
+int findMaximumMarks(vector<int> marks) {
+    if (marks.empty()) {
+        cerr << "Error: Empty list of marks." << endl;
+        return numeric_limits<int>::min();
+    }
+    buildMaxHeap(marks);
+    return marks[0];
+}
+
+// Find the minimum marks using min-heap
+int findMinimumMarks(vector<int> marks) {
+    if (marks.empty()) {
+        cerr << "Error: Empty list of marks." << endl;
+        return numeric_limits<int>::max();
+    }
+    buildMinHeap(marks);
+    return marks[0];
+}
+
+int main() {
+    int numStudents;
+    cout << "Enter number of students: ";
+    cin >> numStudents;
+
+    if (numStudents <= 0) {
+        cerr << "Error: Number of students must be positive." << endl;
+        return 1;
+    }
+
+    vector<int> marks;
+    cout << "Enter the marks of each student:\n";
+    for (int i = 0; i < numStudents; ++i) {
+        int mark;
+        cout << "Student " << i + 1 << ": ";
+        cin >> mark;
+        marks.push_back(mark);
+    }
+
+    cout << "\nMarks obtained by students: ";
+    for (int mark : marks) {
+        cout << mark << " ";
+    }
+    cout << endl;
+
+    int maximumMarks = findMaximumMarks(marks);
+    int minimumMarks = findMinimumMarks(marks);
+
+    if (maximumMarks != numeric_limits<int>::min() && minimumMarks != numeric_limits<int>::max()) {
+        cout << "\nMaximum marks obtained: " << maximumMarks << endl;
+        cout << "Minimum marks obtained: " << minimumMarks << endl;
+    }
+
+    return 0;
+}
