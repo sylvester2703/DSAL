@@ -1,0 +1,109 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+using namespace std;
+struct Record {
+    string id;
+    string fullName;
+    string dept;
+    string location;
+};
+void insertEntry() {
+    Record r;
+    cout << "Enter Roll Number: ";
+    cin >> r.id;
+    cout << "Enter Full Name: ";
+    cin.ignore();
+    getline(cin, r.fullName);
+    cout << "Enter Division: ";
+    getline(cin, r.dept);
+    cout << "Enter Address: ";
+    getline(cin, r.location);
+    ofstream db("students.txt", ios::app);
+    db << r.id << "," << r.fullName << "," << r.dept << "," << r.location << "\n";
+    db.close();
+    cout << "Student record added successfully.\n";
+}
+void displayAllEntries() {
+    ifstream db("students.txt");
+    string row;
+    bool any = false;
+    cout << "\n--- All Student Records ---\n";
+    while (getline(db, row)) {
+        stringstream ss(row);
+        string id, name, div, addr;
+        getline(ss, id, ',');
+        getline(ss, name, ',');
+        getline(ss, div, ',');
+        getline(ss, addr);
+
+        cout << "Roll No: " << id << "\n";
+        cout << "Name: " << name << "\n";
+        cout << "Division: " << div << "\n";
+        cout << "Address: " << addr << "\n";
+        cout << "---------------------------\n";
+        any = true;
+    }
+    if (!any) {
+        cout << "No student records found.\n";
+    }
+    db.close();
+}
+void removeEntry(string targetId) {
+    ifstream db("students.txt");
+    ofstream temp("temp.txt");
+    string row;
+    bool found = false;
+    while (getline(db, row)) {
+        stringstream ss(row);
+        string id;
+        getline(ss, id, ',');
+        if (id != targetId) {
+            temp << row << "\n";
+        } else {
+            found = true;
+        }
+    }
+    db.close();
+    temp.close();
+    remove("students.txt");
+    rename("temp.txt", "students.txt");
+    if (found) {
+        cout << "Record deleted for Roll No: " << targetId << "\n";
+    } else {
+        cout << "No such record found to delete.\n";
+    }
+}
+int main() {
+    int option;
+    string key;
+    do {
+        cout << "\n==== Student Record Menu ====\n";
+        cout << "1. Add New Student\n";
+        cout << "2. Display All Students\n";
+        cout << "3. Delete Student\n";
+        cout << "4. Exit\n";
+        cout << "Choose an option: ";
+        cin >> option;
+        switch (option) {
+            case 1:
+                insertEntry();
+                break;
+            case 2:
+                displayAllEntries();
+                break;
+            case 3:
+                cout << "Enter Roll Number to delete: ";
+                cin >> key;
+                removeEntry(key);
+                break;
+            case 4:
+                cout << "Closing program...\n";
+                break;
+            default:
+                cout << "Invalid choice! Try again.\n";
+        }
+    } while (option != 4);
+    return 0;
+}
