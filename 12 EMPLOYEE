@@ -1,0 +1,128 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() 
+{
+    int choice;
+    string employeeID, name, designation, employeeIDToDelete;
+    double salary;
+    bool found;
+    while (true) 
+    {
+        cout << "\nEnter your choice:\n";
+        cout << "1. Add Employee\n";
+        cout << "2. Delete Employee\n";
+        cout << "3. Display Employee\n";
+        cout << "4. Exit\n";
+        cout << "Choice: ";
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid input! Please enter a number.\n";
+            continue;
+        }
+        switch (choice) 
+        {
+            case 1: 
+            {
+                ofstream file("employees.txt", ios::app);
+                ofstream indexFile("index.txt", ios::app);
+                cout << "Enter Employee ID: ";
+                cin >> employeeID;
+                cout << "Enter Name: ";
+                cin >> name;
+                cout << "Enter Designation: ";
+                cin >> designation;
+                cout << "Enter Salary: ";
+                cin >> salary;
+                file << employeeID << " " << name << " " << designation << " " << salary << "\n";
+                indexFile << employeeID << "\n";
+                file.close();
+                indexFile.close();
+                cout << "Record Inserted Successfully !!\n";
+                break;
+            }
+            case 2: 
+            {
+                found = false;
+                cout << "Enter Employee ID to delete: ";
+                cin >> employeeIDToDelete;
+                ifstream infile("employees.txt");
+                ifstream indexFile("index.txt");
+                ofstream tempFile("temp.txt");
+                ofstream tempIndexFile("tempIndex.txt");
+                while (infile >> employeeID >> name >> designation >> salary) 
+                {
+                    if (employeeID != employeeIDToDelete) 
+                    {
+                        tempFile << employeeID << " " << name << " " << designation << " " << salary << "\n";
+                    } 
+                    else 
+                    {
+                        found = true;
+                    }
+                }
+                while (indexFile >> employeeID) 
+                {
+                    if (employeeID != employeeIDToDelete) 
+                    {
+                        tempIndexFile << employeeID << "\n";
+                    }
+                }
+                infile.close();
+                indexFile.close();
+                tempFile.close();
+                tempIndexFile.close();
+                if (found) 
+                {
+                    remove("employees.txt");
+                    remove("index.txt");
+                    rename("temp.txt", "employees.txt");
+                    rename("tempIndex.txt", "index.txt");
+                    cout << "Record Deleted Successfully !!\n";
+                } 
+                else 
+                {
+                    cout << "Employee record not found.\n";
+                }
+                break;
+            }
+            case 3: 
+            {
+                found = false;
+                string id, n, desig;
+                double sal;
+                cout << "Enter Employee ID to display: ";
+                cin >> employeeID;
+                ifstream infile("employees.txt");
+                while (infile >> id >> n >> desig >> sal) 
+                {
+                    if (id == employeeID) 
+                    {
+                        cout << "\nEmployee Found:\n";
+                        cout << "Employee ID: " << id << endl;
+                        cout << "Name: " << n << endl;
+                        cout << "Designation: " << desig << endl;
+                        cout << "Salary: " << sal << endl;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) 
+                {
+                    cout << "Employee record not found.\n";
+                }
+                infile.close();
+                break;
+            }
+            case 4:
+                cout << "Exiting...\n";
+                return 0;
+            default:
+                cout << "Invalid choice.\n";
+                break;
+        }
+    }
+    return 0;
+}
