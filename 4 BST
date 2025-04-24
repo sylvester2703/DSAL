@@ -1,0 +1,79 @@
+#include<iostream>
+using namespace std;
+struct Node {
+   int data;
+   Node* left;
+   Node* right;
+   Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+Node* insert(Node* root, int val) {
+   if (!root) return new Node(val);
+   if (val < root->data)
+      root->left = insert(root->left, val);
+   else
+      root->right = insert(root->right, val);
+   return root;
+}
+int findHeight(Node* root) {
+   if (!root) return 0;
+   int leftHeight = findHeight(root->left);
+   int rightHeight = findHeight(root->right);
+   return 1 + max(leftHeight, rightHeight);
+}
+int findMin(Node* root) {
+   if (!root) return -1; 
+      root = root->left;
+   return root->data;
+}
+void mirror(Node* root) {
+   if (!root) return;
+   swap(root->left, root->right);
+   mirror(root->left);
+   mirror(root->right);
+}
+bool search(Node* root, int val) {
+   if (!root) return false;
+   if (root->data == val) return true;
+   if (val < root->data)
+      return search(root->left, val);
+   return search(root->right, val);
+}
+void inorder(Node* root) {
+   if (!root) return;
+   inorder(root->left);
+   cout << root->data << " ";
+   inorder(root->right);
+}
+int main() {
+   Node* root = nullptr;
+   int numNodes, val, newNode, searchValue;
+   cout << "Enter the number of nodes to insert into the BST: ";
+   cin >> numNodes;
+   cout << "Enter the values to insert into the BST:\n";
+   for (int i = 0; i < numNodes; i++) {
+      cin >> val;
+      root = insert(root, val);
+   }
+   cout << "Inorder traversal of the BST: ";
+   inorder(root);
+   cout << endl;
+   cout << "Enter a new node to insert into the BST: ";
+   cin >> newNode;
+   root = insert(root, newNode);
+   cout << "Inorder traversal after inserting " << newNode << ": ";
+   inorder(root);
+   cout << endl;
+   int height = findHeight(root);
+   cout << "Number of nodes in the longest path (height): " << height << endl;
+   int minValue = findMin(root);
+   cout << "Minimum data value in the BST: " << minValue << endl;
+   cout << "Enter a value to search in the BST: ";
+   cin >> searchValue;
+   bool isFound = search(root, searchValue);
+   cout << "Search for " << searchValue << ": " << (isFound ? "Found" : "Not Found") << endl;
+   mirror(root);
+   cout << "Inorder traversal after mirroring the tree: ";
+   inorder(root);
+   cout << endl;
+   return 0;
+}
