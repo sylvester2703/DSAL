@@ -1,0 +1,69 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+void addStudent() {
+    ofstream file("students.txt", ios::app);
+    string roll, name, div, addr;
+    cout << "Enter Roll No, Name, Division, Address: ";
+    cin >> roll >> name >> div >> addr;
+    file << roll << " " << name << " " << div << " " << addr << "\n";
+    cout << "Record Added!\n";
+}
+
+void deleteStudent() {
+    string roll, r, n, d, a;
+    bool found = false;
+    cout << "Enter Roll No to delete: ";
+    cin >> roll;
+    ifstream in("students.txt");
+    ofstream out("temp.txt");
+    while (in >> r >> n >> d >> a) {
+        if (r != roll) out << r << " " << n << " " << d << " " << a << "\n";
+        else found = true;
+    }
+    in.close(); out.close();
+    if (found) 
+    { 
+        remove("students.txt"); 
+        rename("temp.txt", "students.txt"); 
+        cout << "Record Deleted!\n";
+    }
+    else 
+    { 
+        remove("temp.txt"); 
+        cout << "Record Not Found!\n"; 
+        
+    }
+}
+
+void displayStudent() {
+    string roll, r, n, d, a;
+    bool found = false;
+    cout << "Enter Roll No to display: ";
+    cin >> roll;
+    ifstream in("students.txt");
+    while (in >> r >> n >> d >> a) {
+        if (r == roll) {
+            cout << "Roll No: " << r << "\nName: " << n << "\nDivision: " << d << "\nAddress: " << a << "\n";
+            found = true; break;
+        }
+    }
+    if (!found) cout << "Record Not Found!\n";
+}
+
+int main() {
+    int choice;
+    do {
+        cout << "\n1.Add\n2.Delete\n3.Display\n4.Exit\nChoice: ";
+        cin >> choice;
+        switch (choice) {
+            case 1: addStudent(); break;
+            case 2: deleteStudent(); break;
+            case 3: displayStudent(); break;
+            case 4: cout << "Exiting...\n"; break;
+            default: cout << "Invalid choice!\n";
+        }
+    } while (choice != 4);
+    return 0;
+}
